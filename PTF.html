@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pythagorean triple finder</title>
+    Max number you want to find the pythagorean triple of, don't go above 200 because the algorithm is not optimal, then press the buttom. <br>
+    <input type="number" id="input" width="1000px">
+    <button onclick="begin()">Enter!</button>
+    <span id="Answer"></span>
+</head>
+<body>
+    
+</body>
+<script>
+    // Check if a number is natural or not
+    function is_Natural(n) {return (n >= 0.0) && (Math.floor(n) === n) && n !== Infinity;}
+    function calc(g) {
+        // Declare result
+        let r;
+        let r_2;
+        for (k=1;;) {
+            // special case for 1 and 3
+            if (g===1 || g === 3) {
+                r=g;
+                break;
+            }
+            // check if 2(g+k)+1 ever get larger than g^2, if so, return a message and break the loop.
+            if ((2*g+2*k+1)>=g**2) {
+                r = "There is no pythagorean triple associated with this number"
+                break;
+            }
+            // check if the 2kg+k^2 part is a perfect square, if so, return r and break the loop, else, increment k and try for some bigger case.
+            if (is_Natural(Math.sqrt(((g+k)**2)-g**2)) === true) {
+                r = Math.sqrt(((g+k)**2)-g**2);
+                r_2 = k;
+                break;
+            } 
+            if (is_Natural(Math.sqrt(((g+k)**2)-g**2)) === false || (2*(g+k)+1)<=g**2) {k++}
+        }
+        return [r,r_2];
+    }
+    function generateArray(Lim) {
+        let r = [];
+        for (let j = 0; j<=Lim; j++) {
+            if (calc(j)[0] === 1) {r.push(1 + "," + 1 + "," + 2)}
+            if (calc(j)[0] === 3) {r.push(3 + "," + 4 + "," + 5)}      
+            if (calc(j)[0] === "There is no pythagorean triple associated with this number")  {
+            } else {r.push(j + "," + calc(j)[0] + "," + (j+calc(j)[1]))}     
+        }
+        return r;
+    }
+    function pythagoreanTripleUpTo(Lim) {
+        let x= "";
+        for (let j = 0; j<=Lim-1; j++) {
+            if (generateArray(Lim)[j]==="1,1,NaN" || generateArray(Lim)[j]==="3,3,NaN") {
+                j++;
+            }
+            x= x+"<br>" +generateArray(Lim)[j]
+        }
+        document.getElementById("Answer").innerHTML = x;
+    }
+    function begin() {
+        var z = document.getElementById('input').value;
+        pythagoreanTripleUpTo(z);
+    }
+</script>
+
+</html>
